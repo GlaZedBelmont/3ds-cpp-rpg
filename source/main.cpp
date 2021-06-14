@@ -73,11 +73,11 @@ int main(int argc, char **argv) {
         C2D_TargetClear(top, C2D_Color32(128, 128, 128, 255));
         C2D_SceneBegin(top);
 
-		hidScanInput();
-		u32 kDown = hidKeysDown();
-		if (kDown & KEY_START) {
-			break;
-		}
+        hidScanInput();
+        u32 kDown = hidKeysDown();
+        if (kDown & KEY_START) {
+            break;
+        }
         map = getMap();
         vector<tileData>::iterator tile;
         
@@ -105,16 +105,16 @@ int main(int argc, char **argv) {
             }
         }
         C3D_FrameEnd(0);
-		
-		gfxFlushBuffers();
-		gfxSwapBuffers();
-		gspWaitForVBlank();
-	}
+        
+        gfxFlushBuffers();
+        gfxSwapBuffers();
+        gspWaitForVBlank();
+    }
     Textures_Free();
     C2D_Fini();
     C3D_Fini();
-	aptExit();
+    aptExit();
     romfsExit(); 
     gfxExit();
-	return 0;
+    return 0;
 }
