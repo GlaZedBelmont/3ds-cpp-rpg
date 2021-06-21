@@ -9,7 +9,7 @@
 
 static C2D_SpriteSheet tiles;
 
-C2D_Image one, two, three, four, five;
+C2D_Image one, two, three, four, five, six;
 
 C2D_Image temp;
 
@@ -21,6 +21,7 @@ void texload(){
     three = C2D_SpriteSheetGetImage(tiles, tiles_three_idx);
     four = C2D_SpriteSheetGetImage(tiles, tiles_four_idx);
     five = C2D_SpriteSheetGetImage(tiles, tiles_five_idx);
+    six = C2D_SpriteSheetGetImage(tiles, tiles_six_idx);
 }
 
 
@@ -40,6 +41,9 @@ C2D_Image getTile(int type) {
 
         case 5:
         return five;
+
+        case 6:
+        return six;
 
         default:
         return one;

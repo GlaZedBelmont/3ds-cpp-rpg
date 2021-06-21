@@ -48,7 +48,7 @@ INCLUDES	:=	include
 GRAPHICS	:=	gfx
 ROMFS		:=	romfs
 GFXBUILD	:=	$(ROMFS)/gfx
-3dsIP		:=  192.168.5.12 # for 3dslink
+3dsIP		:=  192.168.0.150 # for 3dslink
 
 # Path to the files
 # If left blank, will try to use "icon.png", "$(TARGET).png", or the default ctrulib icon, in that order
@@ -227,7 +227,7 @@ all: 3dsx cia
 3dsx: $(BUILD) $(GFXBUILD) $(DEPSDIR) $(ROMFS_T3XFILES) $(ROMFS_FONTFILES) $(T3XHFILES)
 	@mkdir -p $(BUILD) $(GFXBUILD) $(OUTDIR)
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
-#	@3dslink -a $(3dsIP) $(OUTDIR)/$(APP_TITLE).3dsx
+	@3dslink -a $(3dsIP) $(OUTDIR)/$(APP_TITLE).3dsx
 
 #---------------------------------------------------------------------------------
 cia: $(BUILD) $(GFXBUILD) $(DEPSDIR) $(ROMFS_T3XFILES) $(ROMFS_FONTFILES) $(T3XHFILES)
