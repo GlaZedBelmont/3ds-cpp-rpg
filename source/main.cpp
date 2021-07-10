@@ -12,37 +12,62 @@
 
 #include "keyboard.hpp"
 
-
-using namespace std;
-
+class Stats {
+    public:
+        int ATK = 0;
+        int DEF = 0;
+        int MAG = 0;
+        int SPE = 0;
+    // ATK
+        void setAtk(int atk) {
+            ATK = atk;
+        }
+/*        int getAtk() {
+            return ATK;
+        } */
+    // DEF
+        void setDef(int def) {
+            DEF = def;
+        }
+/*        int getDef() {
+            return DEF;
+        }*/
+    // MAG
+        void setMag(int mag) {
+            MAG = mag;
+        }
+/*        int getMag() {
+            return MAG;
+        }*/
+    // SPE
+        void setSpe(int spe) {
+            SPE = spe;
+        }
+/*        int getSpe() {
+            return SPE;
+        }*/
+};
 class Player {
-    string NAME;
-    int HP=0;
+    std::string NAME;
+    int HP = 0;
 
     public:
     // NAME
-        void setName(string name);
-        string getName();
+        void setName(std::string name) {
+            this->NAME = name;
+        };
+        std::string getName() {
+            return this->NAME;
+        };
     // HP
-        void setHP(int hp);
-        int getHP();
+        void setHP(int hp) {
+            this->HP = hp;
+        };
+        int getHP() {
+            return this->HP;
+        };
+        Stats stats;
 };
-
-// NAME
-void Player::setName(string name) {
-   NAME = name;
-}
-string Player::getName() {
-    return NAME;
-}
-
-// HP
-void Player::setHP(int hp) {
-    HP = hp;
-}
-int Player::getHP() {
-    return HP;
-}
 
 struct tileData {
     int type;
@@ -53,12 +78,12 @@ struct tileData {
 //    tileData specificTileData;
 };
 
-vector<tileData> getMap() {
-    string data;
+std::vector<tileData> getMap() {
+    std::string data;
     tileData testTile;
-    vector<tileData> tiles{};
+    std::vector<tileData> tiles{};
     
-    ifstream mapFile("romfs:/test.map");
+    std::ifstream mapFile("romfs:/test.map");
 
    // cout << "The map file has been open\n" << endl;
 
@@ -92,14 +117,16 @@ int main(int argc, char **argv) {
 
     texload();
 
-    vector<tileData> map{};
+    std::vector<tileData> map{};
     map = getMap();
   //  vector<tileData>::iterator tile;
-    int index = 0;
+    //int index = 0;
 
 //    bool DEBUG = false;
 
-    Player player;
+    std::vector<Player> Players(4);
+    std::vector<Player>::iterator Player_Cur;
+    Player_Cur = Players.begin();
 
     
 
@@ -112,27 +139,44 @@ int main(int argc, char **argv) {
             break;
         }
         if (kDown & KEY_X) {
-            player.setName(Keyboard_GetText("Enter name"));
+            Player_Cur->setName(Keyboard_GetText("Enter name"));
             
         }
         if (kDown & KEY_Y) {
-            player.setHP(atoi(Keyboard_GetNumber()));
+            Player_Cur->setHP(atoi(Keyboard_GetNumber("Enter HP")));
             
+        }
+        if (kDown & KEY_UP && Player_Cur != Players.end()-1) {
+            Player_Cur++;
+        }
+        if (kDown & KEY_DOWN && Player_Cur != Players.begin()) {
+            Player_Cur--;
         }
 
         
-        vector<tileData>::iterator tile;
+        std::vector<tileData>::iterator tile;
 
         C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
         C2D_TargetClear(top, C2D_Color32(128, 128, 128, 255));
         C2D_SceneBegin(top);
 
-        index = 0;
-        for (tile = map.begin(); tile != map.end(); ++tile, ++index) {
+       // index = 0;
+        for (tile = map.begin(); tile != map.end(); ++tile) {
             C2D_DrawImageAt(getTile(tile->type), tile->posX, tile->posY, 0.0f, NULL, 1.0f, 1.0f);
         }
-        consoleClear();
-        printf("\x1b[1;0HName: %s\nHP: %i\nCPU: %6.2f%%\nGPU: %6.2f%%\nCmdBuf: %6.2f%%\n", player.getName().c_str(), player.getHP(), C3D_GetProcessingTime()*6.0f, C3D_GetDrawingTime()*6.0f, C3D_GetCmdBufUsage()*100.0f);
+        //consoleClear();
+        printf("\x1b[2;1HCPU: %6.2f%%\x1b[K", C3D_GetProcessingTime()*6.0f);
+		printf("\x1b[3;1HGPU: %6.2f%%\x1b[K", C3D_GetDrawingTime()*6.0f);
+		printf("\x1b[4;1HCmdBuf: %6.2f%%\x1b[K", C3D_GetCmdBufUsage()*100.0f);
+        printf("\x1b[6;1HPlayer_Cur: %i\x1b[K", Player_Cur - Players.begin());
+        printf("\x1b[7;1HName: %s\x1b[K", Player_Cur->getName().c_str());
+        printf("\x1b[8;1HHP: %i\x1b[K", Player_Cur->getHP());
+        printf("\x1b[9;1HATK: %i\x1b[K", Player_Cur->stats.ATK);
+        printf("\x1b[10;1HDEF: %i\x1b[K", Player_Cur->stats.DEF);
+        printf("\x1b[11;1HMAG: %i\x1b[K", Player_Cur->stats.MAG);
+        printf("\x1b[12;1HSPE: %i\x1b[K", Player_Cur->stats.SPE);
+        //printf("Player_Cur: %i\nName: %s\nHP: %i\nATK: %i\nDEF: %i\nMAG: %i\nSPE: %i\n\n", Player_Cur - Players.begin(), Player_Cur->getName().c_str(), Player_Cur->getHP(), Player_Cur->stats.ATK, Player_Cur->stats.DEF, Player_Cur->stats.MAG, Player_Cur->stats.SPE);
+        printf("\x1b[14;1HPress X to set name\nPress Y to set HP\x1b[K");
         C3D_FrameEnd(0);
 
 

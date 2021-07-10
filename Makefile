@@ -54,10 +54,10 @@ GFXBUILD	:=	$(ROMFS)/gfx
 # If left blank, will try to use "icon.png", "$(TARGET).png", or the default ctrulib icon, in that order
 ICON                :=	
 
-BANNER_AUDIO        :=	
-BANNER_IMAGE        :=
+BANNER_AUDIO        :=	./meta/banner.wav
+BANNER_IMAGE        :=	./meta/banner.png
 
-RSF_PATH            :=	meta/app.rsf
+RSF_PATH            :=	./meta/app.rsf
 
 # If left blank, makerom will use the default Homebrew logo
 LOGO                :=	
@@ -192,10 +192,10 @@ ifneq ($(ROMFS),)
 	export _3DSXFLAGS += --romfs=$(CURDIR)/$(ROMFS)
 endif
 
-.PHONY: all 3dsx cia clean
+.PHONY: all 3dsx cia clean send
 
 #---------------------------------------------------------------------------------
-MAKEROM		?=	makerom
+MAKEROM		?=	./tools/makerom.exe
 
 MAKEROM_ARGS		:=	-elf "$(OUTPUT).elf" -rsf "$(RSF_PATH)" -banner "$(BUILD)/banner.bnr" -icon "$(BUILD)/icon.icn" -DAPP_TITLE="$(APP_TITLE)" -DAPP_PRODUCT_CODE="$(PRODUCT_CODE)" -DAPP_UNIQUE_ID="$(UNIQUE_ID)"
 
@@ -206,7 +206,7 @@ ifneq ($(strip $(ROMFS)),)
 	MAKEROM_ARGS	+=	 -DAPP_ROMFS="$(ROMFS)"
 endif
 
-BANNERTOOL	?=	bannertool
+BANNERTOOL	?=	./tools/bannertool.exe
 
 ifeq ($(suffix $(BANNER_IMAGE)),.cgfx)
 	BANNER_IMAGE_ARG := -ci
@@ -222,12 +222,12 @@ endif
 
 #---------------------------------------------------------------------------------
 all: 3dsx cia
+	3dslink -a $(3dsIP) $(OUTDIR)/$(APP_TITLE).3dsx
 
 #---------------------------------------------------------------------------------
 3dsx: $(BUILD) $(GFXBUILD) $(DEPSDIR) $(ROMFS_T3XFILES) $(ROMFS_FONTFILES) $(T3XHFILES)
 	@mkdir -p $(BUILD) $(GFXBUILD) $(OUTDIR)
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
-	@3dslink -a $(3dsIP) $(OUTDIR)/$(APP_TITLE).3dsx
 
 #---------------------------------------------------------------------------------
 cia: $(BUILD) $(GFXBUILD) $(DEPSDIR) $(ROMFS_T3XFILES) $(ROMFS_FONTFILES) $(T3XHFILES)
@@ -267,6 +267,9 @@ clean:
 	@echo clean ...
 	@rm -fr $(BUILD) $(OUTDIR) $(GFXBUILD)
 
+#---------------------------------------------------------------------------------
+send:
+	3dslink -a $(3dsIP) $(OUTDIR)/$(APP_TITLE).3dsx
 
 #---------------------------------------------------------------------------------
 $(GFXBUILD)/%.t3x	$(BUILD)/%.h	:	%.t3s

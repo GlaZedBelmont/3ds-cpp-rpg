@@ -38,11 +38,15 @@ const char *Keyboard_GetText(const char *hint_text) {
 	return input_string;
 }
 
-const char* Keyboard_GetNumber() {
+const char* Keyboard_GetNumber(const char* hint_text) {
     static SwkbdState swkbd;
 	static char input_string[256];
 
     swkbdInit(&swkbd, SWKBD_TYPE_NUMPAD, 1, -1);
+
+	if (strlen(hint_text) != 0)
+		swkbdSetHintText(&swkbd, hint_text);
+		
 	swkbdSetValidation(&swkbd, SWKBD_ANYTHING, 0, 0);
 	swkbdSetFeatures(&swkbd, SWKBD_FIXED_WIDTH);
 	swkbdSetNumpadKeys(&swkbd, 0, 0);

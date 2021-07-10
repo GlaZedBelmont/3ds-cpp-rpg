@@ -64,3 +64,8 @@ out/
 
 # VS Code stuff
 .vscode/
+
+# Tools for building
+tools/
+
+TODO
