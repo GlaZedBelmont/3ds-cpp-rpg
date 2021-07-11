@@ -12,62 +12,9 @@
 
 #include "keyboard.hpp"
 
-class Stats {
-    public:
-        int ATK = 0;
-        int DEF = 0;
-        int MAG = 0;
-        int SPE = 0;
-    // ATK
-        void setAtk(int atk) {
-            ATK = atk;
-        }
-/*        int getAtk() {
-            return ATK;
-        } */
-    // DEF
-        void setDef(int def) {
-            DEF = def;
-        }
-/*        int getDef() {
-            return DEF;
-        }*/
-    // MAG
-        void setMag(int mag) {
-            MAG = mag;
-        }
-/*        int getMag() {
-            return MAG;
-        }*/
-    // SPE
-        void setSpe(int spe) {
-            SPE = spe;
-        }
-/*        int getSpe() {
-            return SPE;
-        }*/
-};
-class Player {
-    std::string NAME;
-    int HP = 0;
+#include "savedata.hpp"
 
-    public:
-    // NAME
-        void setName(std::string name) {
-            this->NAME = name;
-        };
-        std::string getName() {
-            return this->NAME;
-        };
-    // HP
-        void setHP(int hp) {
-            this->HP = hp;
-        };
-        int getHP() {
-            return this->HP;
-        };
-        Stats stats;
-};
+#include "player.hpp"
 
 struct tileData {
     int type;
@@ -170,7 +117,7 @@ int main(int argc, char **argv) {
 		printf("\x1b[4;1HCmdBuf: %6.2f%%\x1b[K", C3D_GetCmdBufUsage()*100.0f);
         printf("\x1b[6;1HPlayer_Cur: %i\x1b[K", Player_Cur - Players.begin());
         printf("\x1b[7;1HName: %s\x1b[K", Player_Cur->getName().c_str());
-        printf("\x1b[8;1HHP: %i\x1b[K", Player_Cur->getHP());
+        printf("\x1b[8;1HHP: %i\x1b[K", Player_Cur->HP);
         printf("\x1b[9;1HATK: %i\x1b[K", Player_Cur->stats.ATK);
         printf("\x1b[10;1HDEF: %i\x1b[K", Player_Cur->stats.DEF);
         printf("\x1b[11;1HMAG: %i\x1b[K", Player_Cur->stats.MAG);
